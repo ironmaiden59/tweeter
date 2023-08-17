@@ -5,32 +5,13 @@
  */
 $(document).ready(function(){
 
+  function clearTweetsContainer() {
+    $("#tweets-container").empty();
+  }
 
-
-const tweetDatas = [
-  {
-    user: {
-      name: "Newton",
-      avatars: "https://i.imgur.com/73hZDYK.png",
-      handle: "@SirIsaac"
-    },
-    content: {
-      text: "If I have seen further it is by standing on the shoulders of giants"
-    },
-    created_at: 1692050451060
-  },
-  {
-    user: {
-      name: "Descartes",
-      avatars: "https://i.imgur.com/nlhLi3I.png",
-      handle: "@rd"
-    },
-    content: {
-      text: "Je pense , donc je suis"
-    },
-    created_at: 1692136851060
-  },
-]
+  //By default, error messages are hidden.
+  $("#error-message-empty").hide();
+  $("#error-message-tooLong").hide();
 
 //Creates a new tweet element (article) and feeds it information from the tweet data//
 const createTweetElement = function (tweetData) {
@@ -49,7 +30,7 @@ const createTweetElement = function (tweetData) {
           ${tweetData.content.text}
         </div>
         <footer class="tweet-footer">
-          <span class="tweet-date">${tweetData.created_at}</span>
+          <span class="tweet-date">${timeago.format(tweetData.created_at)}</span>
           <div class="tweet-response">
             <i class="fas fa-flag"></i>
             <i class="fas fa-retweet"></i>
@@ -60,15 +41,60 @@ const createTweetElement = function (tweetData) {
   return $tweet;
 }
 
+ //Ajax Get request to pull tweets form the server and feed it to the render function//
+ function loadTweets() {
+  $.get("/tweets", function(data) {
+    // Call the renderTweets function with fetched tweet data
+    renderTweets(data);
+  
+  }).fail(function(xhr, status, error) {
+    // Handle the error case
+    console.error("Error fetching tweets:", error);
+  });
+}
+// Call loadTweets when the page loads to fetch and render tweets
+loadTweets();
 
 const renderTweets = function(tweets) {
+  clearTweetsContainer();
   for (const tweet of tweets) {
     const createdTweet = createTweetElement(tweet);
     const tweetContainer = $("#tweets-container")
-    console.log(createdTweet);
+    
     tweetContainer.append(createdTweet)
   }
-}
-renderTweets(tweetDatas)
+};
 
+
+$("#new-tweet-form").submit(function(event) {
+  event.preventDefault();
+    
+  const maxChar = 140;
+  const $tweetText = $(this).find("#tweet-text");
+  const inputLength = $tweetText.val().trim().length;
+
+  const $errorEmpty = $("#error-message-empty");
+  const $errorTooLong = $("#error-message-tooLong");
+
+  $errorEmpty.slideUp("slow");
+  $errorTooLong.slideUp("slow");
+
+  if (!inputLength) {
+    $errorEmpty.slideDown("slow");
+    $errorTooLong.hide();
+  } else if (inputLength > maxChar) {
+    $errorTooLong.slideDown("slow");
+    $errorEmpty.hide();
+  } else {
+    const newTweet = $(this).serialize();
+    $.post("/tweets/", newTweet, () => {
+      $tweetText.val("");
+      $(this).find(".counter").text(maxChar);
+      loadTweets();
+    }).fail((xhr, status, error) => {
+      console.error("Error:", error);
+      // Handle error case
+    });
+  }
+});
 });
