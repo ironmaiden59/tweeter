@@ -61,7 +61,7 @@ const renderTweets = function(tweets) {
     const createdTweet = createTweetElement(tweet);
     const tweetContainer = $("#tweets-container")
     
-    tweetContainer.append(createdTweet)
+    tweetContainer.prepend(createdTweet);
   }
 };
 
