@@ -13,6 +13,13 @@ $(document).ready(function(){
   $("#error-message-empty").hide();
   $("#error-message-tooLong").hide();
 
+    //Escape function to re-encode text so that unsafe characters are converted into a safe "encoded" representation//
+    const escape = function(str) {
+      let div = document.createElement("div");
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    };
+
 //Creates a new tweet element (article) and feeds it information from the tweet data//
 const createTweetElement = function (tweetData) {
   const $tweet = $(`
@@ -27,7 +34,7 @@ const createTweetElement = function (tweetData) {
           </div>
         </header>
         <div class="tweet-text">
-          ${tweetData.content.text}
+        ${escape(tweetData.content.text)}
         </div>
         <footer class="tweet-footer">
           <span class="tweet-date">${timeago.format(tweetData.created_at)}</span>
