@@ -36,4 +36,16 @@ nav span {
   align-items: center;
 }
 
+@media only screen and (min-width: 1024px)  {
+  nav {
+    height: 120px;
+  }
 
+  .nav span {
+    font-size: 3rem;
+  }
+
+  .write-tweet {
+    font-size: 1.5rem;
+  }
+}
