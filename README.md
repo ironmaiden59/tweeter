@@ -16,8 +16,15 @@ This app provides the user with the ability to post tweets to a Tweet feed. This
 
 **Main Tweeter Page**
 
+https://github.com/ironmaiden59/tweeter/blob/master/docs/Desktop%20view.png?raw=true
 
+**Main Tweeter Page with an Error Message when Submitting an Empty Tweet**
 
+https://github.com/ironmaiden59/tweeter/blob/master/docs/Error%20Message.png?raw=true
+
+**Less than 1024px**
+
+https://github.com/ironmaiden59/tweeter/blob/master/docs/Less%20than%201024pxpng.png?raw=true
 
 ## Getting Started
 1. Install dependencies using the `npm install` command.
